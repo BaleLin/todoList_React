@@ -8,26 +8,26 @@ export default class TodoList extends Component {
             todos: [{
                 id:'1',
                 name: 'Parking Lot APP Refactor',
-                isComplete:false
+                complete:false
             },
                 {
                     id:'2',
                     name: 'Parking Lot APP 时序图 ',
-                    isComplete:true
+                    complete:true
                 },
                 {
                     id:'3',
                     name: 'Parking Lot APP 中类的流程图',
-                    isComplete:false
+                    complete:false
                 },{
                     id:'4',
                     name: '总结Java和面向对象相关的概念和知识',
-                    isComplete:true
+                    complete:true
                 },
                 {
                     id:'5',
                     name: '总结Parking Lot APP开发过程中的问题和经验',
-                    isComplete:false
+                    complete:false
                 }],
             statusOfList: 'all'
         };
@@ -40,10 +40,10 @@ export default class TodoList extends Component {
         this.setState(todos);
     }
     checkItem=(viewId,event)=>{
-        // this.state.todos.find(item => item.id === viewId).complete=event.target.checked;
-        // this.setState({todos:this.state.todos});
-        this.state.todos.find(item=>item.id === viewId).complete=event.target.checked;
+        this.state.todos.find(item => item.id === viewId).complete=event.target.checked;
         this.setState({todos:this.state.todos});
+        // this.state.todos.find(item=>item.id === viewId).complete=event.target.checked;
+        // this.setState({todos:this.state.todos});
     }
     edit = (event) => {
         event.target.setAttribute('contentEditable', 'true');
@@ -87,7 +87,6 @@ export default class TodoList extends Component {
         return uuid;
     }
     render(){
-        var todos = this.state.todos;
         return(
             <div className="container">
                 <h1>TodoList</h1>
@@ -97,10 +96,7 @@ export default class TodoList extends Component {
                 </div>
                 <br/>
                 <ol>
-                    {/*{todos.map(todo=>{*/}
-                        {/*return <li id={todo.id} className={todo.complete?'checked':''}><input name="done-todo"  onChange={(e)=>this.checkItem(todo.id,e)} type="checkbox" className="done-todo"/> {todo.name} </li>*/}
-                    {/*})}*/}
-                    {todos.map(todo=>{return<li id={todo.id} onDoubleClick={this.edit} className={todo.isComplete?'checked':'' }><input name="done-todo" onChange={(e)=>this.checkItem(todo.id,e)} type="checkbox" className="done-todo"/>{todo.name}</li>})}
+                    {this.filterByStatus(this.state.todos, this.state.statusOfList).map(todo=>{return<li id={todo.id} onClick={this.edit}  className={todo.complete?'checked':'' }><input name="done-todo" onChange={(e)=>this.checkItem(todo.id,e)} type="checkbox" className="done-todo"/>{todo.name}</li>})}
 
                 </ol>
                 <ul id="filters">

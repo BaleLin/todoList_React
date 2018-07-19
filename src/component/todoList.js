@@ -28,8 +28,9 @@ export default class TodoList extends Component {
                     id:'5',
                     name: '总结Parking Lot APP开发过程中的问题和经验',
                     isComplete:false
-                }]
-        }
+                }],
+            statusOfList: 'all'
+        };
     }
 
     addItem=()=>{
@@ -44,6 +45,28 @@ export default class TodoList extends Component {
         this.state.todos.find(item=>item.id === viewId).complete=event.target.checked;
         this.setState({todos:this.state.todos});
     }
+    edit = (event) => {
+        event.target.setAttribute('contentEditable', 'true');
+        event.target.focus();
+    };
+    setStatusofListByStatus = status => {
+        this.setState({ statusOfList: status });
+    };
+    filterByStatus = (todos, status) => {
+        const filterExecuter = {
+            all() {
+                return true;
+            },
+            active(element) {
+                return !element.complete;
+            },
+            complete(element) {
+                return element.complete;
+            }
+        };
+        const result = todos.filter(filterExecuter[status]);
+        return result;
+    };
     generateUUID=()=> {
         /*jshint bitwise:false */
         var i,
@@ -74,10 +97,44 @@ export default class TodoList extends Component {
                 </div>
                 <br/>
                 <ol>
-                    {todos.map(todo=>{
-                        return <li id={todo.id} className={todo.complete?'checked':''}><input name="done-todo"  onChange={(e)=>this.checkItem(todo.id,e)} type="checkbox" className="done-todo"/> {todo.name} </li>
-                    })}
+                    {/*{todos.map(todo=>{*/}
+                        {/*return <li id={todo.id} className={todo.complete?'checked':''}><input name="done-todo"  onChange={(e)=>this.checkItem(todo.id,e)} type="checkbox" className="done-todo"/> {todo.name} </li>*/}
+                    {/*})}*/}
+                    {todos.map(todo=>{return<li id={todo.id} onDoubleClick={this.edit} className={todo.isComplete?'checked':'' }><input name="done-todo" onChange={(e)=>this.checkItem(todo.id,e)} type="checkbox" className="done-todo"/>{todo.name}</li>})}
+
                 </ol>
+                <ul id="filters">
+                    <li>
+                        <a
+                            href="#"
+                            data-filter="all"
+                            onClick={() => this.setStatusofListByStatus('all')}
+                            className="selected"
+                        >
+                            ALL
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            data-filter="active"
+                            onClick={() => this.setStatusofListByStatus('active')}
+                            className=""
+                        >
+                            Active
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            data-filter="complete"
+                            onClick={() => this.setStatusofListByStatus('complete')}
+                            className=""
+                        >
+                            Complete
+                        </a>
+                    </li>
+                </ul>
             </div>
         )
     }
